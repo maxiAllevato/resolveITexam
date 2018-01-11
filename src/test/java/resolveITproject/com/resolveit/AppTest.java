@@ -1,4 +1,4 @@
-package resolveITproject.com.resolveit;
+package test.java.resolveITproject.com.resolveit;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

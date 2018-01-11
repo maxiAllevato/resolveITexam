@@ -3,13 +3,14 @@ package com.resolveit;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class TokenWord implements Comparable<TokenWord>{
 	
 	private String word;
 	private String pos;
 	private String lem;
-	private List<Integer> sentence;
+	private Set<Integer> sentence;
 	private int totalOccurrences;
 	
 	
@@ -38,11 +39,11 @@ public class TokenWord implements Comparable<TokenWord>{
 		this.lem = lem;
 	}
 	
-	public List<Integer> getSentence() {
+	public Set<Integer> getSentence() {
 		return sentence;
 	}
-	public void setSentence(List<Integer> sentence) {
-		this.sentence = sentence;
+	public void setSentence(Set<Integer> sentenceList) {
+		this.sentence = sentenceList;
 	}
 	public int compareTo(TokenWord o) {
 		return this.word.compareTo(o.getWord());
@@ -51,16 +52,4 @@ public class TokenWord implements Comparable<TokenWord>{
 	
 	
 	
-	public static Comparator<TokenWord> WordNameComparator = new Comparator<TokenWord>() {
-
-		public int compare(TokenWord t1, TokenWord t2) {
-		   String tokW1 = t1.getWord().toUpperCase();
-		   String tokw2 = t2.getWord().toUpperCase();
-
-		   //ascending order
-		   return tokW1.compareTo(tokw2);
-
-		  
-	    }};
-
 }

@@ -2,13 +2,14 @@ package com.resolveit;
 
 
 import java.util.List;
+import java.util.Set;
 
 public class ObjectToJson {
 	
 	
 
 	private String word;
-	private List<Integer> sentence;
+	private Set<Integer> sentence;
 	private int totalOcurreces;
 	
 	public String getWord() {
@@ -17,11 +18,11 @@ public class ObjectToJson {
 	public void setWord(String word) {
 		this.word = word;
 	}
-	public List<Integer> getSentence() {
+	public Set<Integer> getSentence() {
 		return sentence;
 	}
-	public void setSentence(List<Integer> sentence) {
-		this.sentence = sentence;
+	public void setSentence(Set<Integer> set) {
+		this.sentence = set;
 	}
 	public int getTotalOcurreces() {
 		return totalOcurreces;

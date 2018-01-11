@@ -2,10 +2,19 @@ package com.resolveit;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,7 +39,18 @@ import edu.stanford.nlp.util.CoreMap;
 public class App 
 {
 	
-	public ArrayList<TokenWord> tokenList = new ArrayList();
+	public ArrayList<TokenWord> tokenList = new ArrayList<TokenWord>();
+	
+	
+	public static SortedMap<String, TokenWord> map = new TreeMap<String, TokenWord>(new Comparator<String>() {
+	    public int compare(String o1, String o2) {
+	        return o1.toLowerCase().compareTo(o2.toLowerCase());
+	    }
+	});
+	
+
+	public static List<TokenWord> listword = new ArrayList<TokenWord>();
+
 	
     public static void main( String[] args )
     {
@@ -54,13 +74,8 @@ public class App
      // these are all the sentences in this document
      // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
      List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-
-     List<TokenWord> listword = new ArrayList<TokenWord>();
-     List <Integer> sentList = new ArrayList<Integer>();
+    
      int numSent= 0;
-     boolean check = true;
-     
-     
      
      for(CoreMap sentence: sentences) {
        // traversing the words in the current sentence
@@ -70,42 +85,50 @@ public class App
          String word = token.get(TextAnnotation.class);
          // this is the POS tag of the token
          String pos = token.get(PartOfSpeechAnnotation.class);
-         // this is the NER label of the token
-         String ne = token.get(NamedEntityTagAnnotation.class);
        
          String lem = token.get(LemmaAnnotation.class);
- 
-         sentList.add(numSent);
+         
+        // System.out.println("Word " + word);
+         
+        
          TokenWord tokenWord =  new TokenWord();
          tokenWord.setLem(lem);
          tokenWord.setPos(pos);
          tokenWord.setWord(word);
          tokenWord.setTotalOccurrences(1);
-       
-         
-         if(check){
-        	 	List <Integer> sentList1 = new ArrayList<Integer>();
-        	 
-        	 	sentList1.add(numSent);
-        	 	tokenWord.setSentence(sentList1);
-        	 	listword.add(tokenWord);
-        	 	check =false;
-        	 
-         }else {
-        	 	addWord(listword, tokenWord, numSent);
-         }
 
+   
+	 	if(!isInExclusionList(tokenWord.getWord())){
+	 		addWordReload(listword, tokenWord, numSent);
+        }
+	 	
+  
        }
        numSent++;
       
      }
   
+ 
+     
+     Collections.sort(listword, new Comparator<TokenWord>() {
+
+ 		public int compare(TokenWord t1, TokenWord t2) {
+ 		   String tokW1 = t1.getWord().toUpperCase();
+ 		   String tokw2 = t2.getWord().toUpperCase();
+
+ 		   //ascending order
+ 		   return tokW1.compareTo(tokw2);
+
+ 		  
+ 	    }});
+     
      formatListAndShow(listword);
         
     }
     
-    
-    private static void formatListAndShow(List<TokenWord> listword) {
+   
+
+	private static void formatListAndShow(List<TokenWord> listword) {
     		
     		ArrayList<ObjectToJson> formatedList = new ArrayList();
     		
@@ -133,55 +156,55 @@ public class App
 	     System.out.println(show);
 		
 	}
-
-
-	public static void addWord(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
-    	
-	    	if(tokenWord.getWord().equals("a") || tokenWord.getWord().equals("the") || tokenWord.getWord().equals("and") 
-	    			|| tokenWord.getWord().equals("of") || tokenWord.getWord().equals("in") || tokenWord.getWord().equals("be") 
-	    			|| tokenWord.getWord().equals("also") || tokenWord.getWord().equals("as") || tokenWord.getWord().equals(",") || tokenWord.getWord().equals(".") || tokenWord.getWord().equals(":") || tokenWord.getWord().equals("``") || tokenWord.getWord().equals("\u0027\u0027")  ) {
-	    		
-	    	}else {
-	    		boolean add = true;
-	    		Iterator <TokenWord> iterTW = listword.iterator();
-	    		while(iterTW.hasNext()) {
-	    			
-	    			TokenWord tw = iterTW.next();
-	    			boolean isIndex = tw.getPos().indexOf(tokenWord.getPos()) != -1;
-	    			boolean isIndexx = tokenWord.getPos().indexOf(tw.getPos()) != -1;
-	    			if(tw.getLem().equalsIgnoreCase(tokenWord.getLem()) && (isIndex || isIndexx)) {
-	    				int sum = tw.getTotalOccurrences();
-	    				sum++;
-	    				tw.setTotalOccurrences(sum);
-	    				tw.getSentence().add(numSent);
-	    				add = false;
-	    				break;
-	    			}
-
-	    			
-	    		}
-    		
-    		
-	    		if(add) {
-	    			
-	    		 	 List <Integer> sentList1 = new ArrayList<Integer>();
-	            	 
-	            	 sentList1.add(numSent);
-	            	 tokenWord.setSentence(sentList1);
-	    			
-	    			listword.add(tokenWord);
-	            	
-	                System.out.println("sorting:");
-	           	   Collections.sort(listword, tokenWord.WordNameComparator);
-	    		}
-    		
-  
-    		
-    	}
-    		
-    		
     
-    }   
+    
+    public static boolean isInExclusionList(String value) {
+    	
+    		return ExclusionList.checkIfExist(value);
+    	
+    }
+
+	public static void addWordReload(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
+    	
+		if(!makeUpdate(listword, tokenWord, numSent)) {
+			 Set <Integer> sentList1 = new HashSet<Integer>();
+			        	 
+			 sentList1.add(numSent);
+			 tokenWord.setSentence(sentList1);
+			listword.add(tokenWord);
+						
+		}
+		
+	}
+
+
+	private static boolean makeUpdate(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
+		
+		Iterator <TokenWord> iterTW = listword.iterator();
+		while(listword != null && iterTW.hasNext()) {
+			
+			TokenWord tw = iterTW.next();
+			
+			if(tw.getLem().equalsIgnoreCase(tokenWord.getLem()) && sameMeaning(tokenWord, tw)) {
+				
+				tw.setTotalOccurrences(tw.getTotalOccurrences() + 1);
+				tw.getSentence().add(numSent);
+				
+				return true;
+			}
+		}
+	
+		return false;
+	}	
+    
+
+	private static boolean sameMeaning(TokenWord tokenWord, TokenWord tw) {
+		
+		boolean samePos = tw.getPos().indexOf(tokenWord.getPos()) != -1;
+		boolean samePoss = tokenWord.getPos().indexOf(tw.getPos()) != -1;
+		
+		return (samePoss || samePos)?true:false;
+	}
     	
     
     
