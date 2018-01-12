@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.resolveit;
 
 import java.util.ArrayList;
@@ -11,18 +14,12 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.StemAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -32,8 +29,9 @@ import edu.stanford.nlp.util.CoreMap;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Hello world!
+ * 
  *
  */
 public class App 
@@ -52,6 +50,11 @@ public class App
 	public static List<TokenWord> listword = new ArrayList<TokenWord>();
 
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main( String[] args )
     {
        
@@ -99,7 +102,7 @@ public class App
 
    
 	 	if(!isInExclusionList(tokenWord.getWord())){
-	 		addWordReload(listword, tokenWord, numSent);
+	 		evaluateWord(listword, tokenWord, numSent);
         }
 	 	
   
@@ -109,7 +112,7 @@ public class App
      }
   
  
-     
+     //sort the list
      Collections.sort(listword, new Comparator<TokenWord>() {
 
  		public int compare(TokenWord t1, TokenWord t2) {
@@ -128,6 +131,11 @@ public class App
     
    
 
+	/**
+	 * Format list and show.
+	 *
+	 * @param listword the listword
+	 */
 	private static void formatListAndShow(List<TokenWord> listword) {
     		
     		ArrayList<ObjectToJson> formatedList = new ArrayList();
@@ -158,13 +166,26 @@ public class App
 	}
     
     
+    /**
+     * Checks if is in exclusion list.
+     *
+     * @param value the value
+     * @return true, if is in exclusion list
+     */
     public static boolean isInExclusionList(String value) {
     	
     		return ExclusionList.checkIfExist(value);
     	
     }
 
-	public static void addWordReload(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
+	/**
+	 * Evaluate each word to make update or add to the list
+	 *
+	 * @param listword the listword
+	 * @param tokenWord the token word
+	 * @param numSent the num sent
+	 */
+	public static void evaluateWord(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
     	
 		if(!makeUpdate(listword, tokenWord, numSent)) {
 			 Set <Integer> sentList1 = new HashSet<Integer>();
@@ -178,6 +199,14 @@ public class App
 	}
 
 
+	/**
+	 * Make update if its necessary
+	 *
+	 * @param listword the listword
+	 * @param tokenWord the token word
+	 * @param numSent the num sent
+	 * @return true, if successful
+	 */
 	private static boolean makeUpdate(List<TokenWord> listword, TokenWord tokenWord, int numSent) {
 		
 		Iterator <TokenWord> iterTW = listword.iterator();
@@ -198,6 +227,14 @@ public class App
 	}	
     
 
+	/**
+	 * Evaluate if two words have Same meaning.
+	 * 
+	 *
+	 * @param tokenWord the token word
+	 * @param tw the tw
+	 * @return true, if successful
+	 */
 	private static boolean sameMeaning(TokenWord tokenWord, TokenWord tw) {
 		
 		boolean samePos = tw.getPos().indexOf(tokenWord.getPos()) != -1;
