@@ -147,15 +147,15 @@ public class App
 			
 			ObjectToJson obj = new ObjectToJson();
 			obj.setWord(tw.getWord());
-			obj.setTotalOcurreces(tw.getTotalOccurrences());
+			obj.setTotalOcurrences(tw.getTotalOccurrences());
 			obj.setSentence(tw.getSentence());
 			
 			formatedList.add(obj);
 		}
     	
     	
-		Result result = new Result();
-	     result.setResults(formatedList);
+			Result result = new Result();
+			result.setResults(formatedList);
     	
 	     
 	     Gson gsonPrint = new GsonBuilder().setPrettyPrinting().create();

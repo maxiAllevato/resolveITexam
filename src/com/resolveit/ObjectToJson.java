@@ -1,7 +1,6 @@
 package com.resolveit;
 
 
-import java.util.List;
 import java.util.Set;
 
 public class ObjectToJson {
@@ -10,7 +9,7 @@ public class ObjectToJson {
 
 	private String word;
 	private Set<Integer> sentence;
-	private int totalOcurreces;
+	private int totalOcurrences;
 	
 	public String getWord() {
 		return word;
@@ -25,10 +24,10 @@ public class ObjectToJson {
 		this.sentence = set;
 	}
 	public int getTotalOcurreces() {
-		return totalOcurreces;
+		return totalOcurrences;
 	}
-	public void setTotalOcurreces(int totalOcurreces) {
-		this.totalOcurreces = totalOcurreces;
+	public void setTotalOcurrences(int totalOcurrences) {
+		this.totalOcurrences = totalOcurrences;
 	}
 	
 	
