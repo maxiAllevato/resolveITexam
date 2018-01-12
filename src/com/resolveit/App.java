@@ -167,7 +167,7 @@ public class App
     
     
     /**
-     * Checks if is in exclusion list.
+     * Checks if word is in exclusion list.
      *
      * @param value the value
      * @return true, if is in exclusion list
